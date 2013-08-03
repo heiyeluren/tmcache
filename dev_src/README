@@ -1,0 +1,36 @@
+     tmcache - TieMa(Tiny&Mini) Memory Cache Server (Daemon)
+
+tmcache is a very small memory cache server, It run from daemon. It is similar to memcachd, and fully compatible with the memcached communication protocol can be easily carried from the memcached to tmcache transplant. tmcache is based on the thread to run, the faster the speed.
+
+ tmcache including
+
+  *  Based memory data storage
+  *  Compatible memcached communication protocol
+  *  Few operation interface, The use of simple 
+  *  Support custom port,max_clients,memory use control
+  *  ...
+
+See the manual entry for more details.
+
+Files in this distribution:
+
+    README		this
+    Makefile		guess
+    tmcache.c		source file
+    tmcache.h		source file
+    tm_global.h		source file
+    tm_common.c		source file
+    tm_common.h		source file
+    tm_hash.c		source file
+    tm_hash.h		source file
+    tm_queue.c		source file
+    tm_queue.h		source file
+    tmhttpd.1		manual entry
+
+To build: If you're on a SysV-like machine (which includes old Linux systems
+but not new Linux systems), edit the Makefile and uncomment the SYSVLIBS line.
+Otherwise, just do a make.
+
+	blog  http://blog.csdn.net/heiyeshuwu
+    project http://heiyeluren.googlecode.com
+

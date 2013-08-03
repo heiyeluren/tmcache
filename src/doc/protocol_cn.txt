@@ -1,0 +1,161 @@
+
+【 tmcache协议和相关信息定义 】
+
+
+//-------------------------
+//    协议定义
+//-------------------------
+
+[ 错误指令]
+tmcache的协议的错误部分主要是三个错误提示之提示指令：
+普通错误信息，比如指令错误之类的
+ERROR\r\n
+
+客户端错误
+CLIENT_ERROR <错误信息>\r\n
+
+服务器端错误
+SERVER_ERROR <错误信息>\r\n
+
+[ 数据保存指令]
+数据保存是基本的功能，就是客户端通过命令把数据返回过来，服务器端接收后进行处理。
+指令格式：
+<命令> <键> <标记> <有效期> <数据长度>\r\n
+
+<命令> - command name
+主要是三个储存数据的三个命令， set, add, replace
+set 命令是保存一个叫做key的数据到服务器上
+add 命令是添加一个数据到服务器，但是服务器必须这个key是不存在的，能够保证数据不会被覆盖
+replace 命令是替换一个已经存在的数据，如果数据不存在，就是类似set功能
+
+<键> - key
+就是保存在服务器上唯一的一个表示符，必须是跟其他的key不冲突，否则会覆盖掉原来的数据，这个key是为了能够准确的存取一个数据项目
+
+<标记> - flag
+标记是一个16位的无符号整形数据，用来设置服务器端跟客户端一些交互的操作
+
+<有效期> - expiration time
+是数据在服务器上的有效期限，如果是0，则数据永远有效，单位是秒，tmcache服务器端会把一个数据的有效期设置为当前Unix时间+设置的有效时间
+
+<数据长度> - bytes
+数据的长度，block data 块数据的长度，一般在这个个长度结束以后下一行跟着block data数据内容，发送完数据以后，客户端一般等待服务器端的返回，服务器端的返回：
+
+数据保存成功
+STORED\r\n
+
+数据保存失败，一般是因为服务器端这个数据key已经存在了
+NOT_STORED\r\n
+
+
+[ 数据提取命令]
+从服务器端提取数据主要是使用get指令，格式是：
+get <键>*\r\n
+
+<键>* - key
+key是是一个不为空的字符串组合，发送这个指令以后，等待服务器的返回。如果服务器端没有任何数据，则是返回：
+END\r\n
+
+证明没有不存在这个key，没有任何数据，如果存在数据，则返回指定格式：
+VALUE <键> <标记> <数据长度>\r\n
+<数据块>\r\n
+
+返回的数据是以VALUE开始的，后面跟着key和flags，以及数据长度，第二行跟着数据块。
+
+<键> -key
+是发送过来指令的key内容
+
+<标记> - flags
+是调用set指令保存数据时候的flags标记
+
+<数据长度> - bytes
+是保存数据时候定位的长度
+
+<数据块> - data block
+数据长度下一行就是提取的数据块内容
+
+
+
+[ 数据删除指令]
+数据删除指令也是比较简单的，使用get指令，格式是：
+delete <键> <超时时间>\r\n
+
+<键> - key
+key是你希望在服务器上删除数据的key键
+
+<超时时间> - timeout
+按照秒为单位，这个是个可选项，如果你没有指定这个值，那么服务器上key数据将马上被删除，如果设置了这个值，那么数据将在超时时间后把数据清除，该项缺省值是0，就是马上被删除
+
+删除数据后，服务器端会返回：
+DELETED\r\n
+删除数据成功
+NOT_FOUND\r\n
+这个key没有在服务器上找到
+
+如果要删除所有服务器上的数据，可以使用flash_all指令，格式：
+flush_all\r\n
+
+这个指令执行后，服务器上所有缓存的数据都被删除，并且返回：
+OK\r\n
+
+这个指令一般不要轻易使，除非你却是想把所有数据都干掉，删除完以后可以无法恢复的。
+
+
+[其他指令]
+如果想了解当前tmcache服务器的状态和版本等信息，可以使用状态查询指令和版本查询指令。
+
+如果想了解当前所有tmcache服务器运行的状态信息，可以使用stats指令，格式
+stats\r\n
+服务器将返回每行按照 STAT 开始的状态信息，包括20行，20项左右的信息，包括守护进程的pid、版本、保存的项目数量、内存占用、最大内存限制等等信息。
+
+如果只是想获取部分项目的信息，可以指定参数，格式：
+stats <参数>\r\n
+这个指令将只返回指定参数的项目状态信息。
+
+如果只是想单独了解当前版本信息，可以使用version指令，格式：
+version\r\n
+将返回以 VERSION 开头的版本信息
+
+如果想结束当前连接，使用quit指令，格式：
+quit\r\n
+
+
+
+
+//-------------------------
+//    帮助信息
+//-------------------------
+tmcache - TieMa(Tiny&Mini) Memory Cache Server
+Version 1.0.0_alpha
+
+usage: tmcache [OPTION] ... 
+
+Options: 
+  -p <num>      port number to listen on,default 11211
+  -d            run as a daemon, default No
+  -m <num>      max memory to use for items in megabytes, default is 16M
+  -c <num>      max simultaneous connections, default is 1024
+  -v            print version information
+  -h            print this help and exit
+
+Example: 
+  tmcache -p 11211 -m 16 -c 1024 -d
+
+
+//-------------------------
+//    状态信息
+//-------------------------
+STAT version 1.0.0_alpha
+STAT pid 1230
+STAT start_time 1236720910
+STAT run_time 230100
+STAT mem_total 16777216
+STAT mem_used 8388608
+STAT item_total 1252
+STAT visit_total 123024
+STAT visit_add 1342
+STAT visit_del 102
+STAT visit_get 12430
+END
+
+
+
