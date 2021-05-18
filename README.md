@@ -24,7 +24,9 @@ The like memcached mini memory cache daemon (ANSI C, GCC require)
 <pre>
 
 <b>tmcache - TieMa?(Tiny&Mini) Memory Cache Server (Daemon)</b>
-tmcache is a very small memory cache server, It run from daemon. It is similar to memcachd, and fully compatible with the memcached communication protocol can be easily carried from the memcached to tmcache transplant. tmcache is based on the thread to run, the faster the speed.
+tmcache is a very small memory cache server, It run from daemon. It is similar to memcachd, 
+and fully compatible with the memcached communication protocol can be easily carried from the memcached to tmcache transplant. 
+tmcache is based on the thread to run, the faster the speed.
 
 <b>tmcache including:</b>
   * Based memory data storage
