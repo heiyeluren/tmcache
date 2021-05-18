@@ -1,7 +1,7 @@
 tmcache
 =======
 
-类似Memcached的缓存服务器，兼容Memcached协议 
+类似Memcached的缓存服务引擎，兼容Memcached协议，无任何依赖，轻巧纯粹
 
 The like memcached mini memory cache daemon (ANSI C, GCC require)
 
