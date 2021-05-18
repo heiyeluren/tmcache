@@ -6,8 +6,20 @@ tmcache
 The like memcached mini memory cache daemon (ANSI C, GCC require)
 
  * 最后更新: 2008/10/25  v1.0.0 beta
- * 下载地址： <a href="http://heiyeluren.googlecode.com/files/tmcache-1.0.0_beta.tar.gz">Download</a>
 
+
+---
+
+
+###### Implementation Mechanism
+> 
+> The Tmcache cache service， mainly adopts a single-process model, and the internal core data structure mainly relies on Hash tables and Queues.
+> 
+> The protocol level is implemented in accordance with Memcached's text version protocol and can be run as an independent daemon.
+
+
+
+###### Usage:
 
 <pre>
 
@@ -46,3 +58,4 @@ Example:
 
 
 </pre>
+
