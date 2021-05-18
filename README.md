@@ -12,10 +12,11 @@ The like memcached mini memory cache daemon (ANSI C, GCC require)
 
 
 ###### Implementation Mechanism
-> 
-> The Tmcache cache service， mainly adopts a single-process model, and the internal core data structure mainly relies on Hash tables and Queues.
-> 
-> The protocol level is implemented in accordance with Memcached's text version protocol and can be run as an independent daemon.
+<pre>
+The Tmcache cache service， mainly adopts a single-process model, and the internal core data structure mainly relies on Hash tables and Queues.
+
+The protocol level is implemented in accordance with Memcached's text version protocol and can be run as an independent daemon.
+</pre>
 
 
 
